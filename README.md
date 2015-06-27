@@ -75,13 +75,14 @@ echo $send->last_message;
 ####Kalan Kontör Sorgulaması için:
 
 ```php
-echo Smsapi::checkBalance();
+echo Smsapi::getCredit();
 ```
 
 ####Originatörleri listelemek için:
 
 ```php
-echo Smsapi::listOriginators();
+$originators = Smsapi::getOriginators();
+dd($originators);
 ```
 
 #### Gelecek bir tarihe SMS yollamak için:
