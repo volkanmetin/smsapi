@@ -1,0 +1,23 @@
+{
+    "name": "volkanmetin/smsapi",
+    "description": "SMS API for Laravel 5",
+    "keywords": ["laravel","sms","api", "turacell", "smsorigin", "laravel5"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Volkan Metin",
+            "email": "ben@volkanmetin.com",
+            "homepage": "http://volkanmetin.com",
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "illuminate/support": "5.0.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Volkanmetin\\Smsapi": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}
