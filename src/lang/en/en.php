@@ -8,51 +8,56 @@
  *
 */
 
-return array (
+return [
 
-	//Paket Raporları
-	'reports'  => array(
-		
-		'20'    =>  'The xml that has been posted is misformatted.',
-		'21'    =>  'You don\'t own the originator (sender ID)',
-		'22'    =>  'Your balance is insufficent',
-		'23'    =>  'Username or password is incorrect.',
-		'24'    =>  'There is another action happening on your account',
-		'25'    =>  'Please try again in a couple of minutes later',
-		'30'    =>  'Account is not activated yet.',
-		
-		'999'   =>  'Unknwon error',
-	
-	),
+	'api' => [
+		'1' 	=> 'SMS başarıyla gönderildi.',
+		'2'		=> 'Bir alıcı girmelisiniz.',
+		'3'		=> 'Alıcı dizisinde hatalı eleman var.',
+		'4'		=> 'Bir SMS metni girmelisiniz.',
+		'5'		=> 'SMS gönderilecek tarih formatını hatalı girdiniz. (Format: Y-m-d H:i)',
+		'6'		=> 'Ayar dosyasında varsayılan SMS bağlığı boş olamaz.',
+		'7'		=> 'Birden fazla alıcıya birden fazla farklı mesaj tanımlanmış. Ancak alıcı sayısıyla mesaj sayısı uyuşmuyor.',
 
-	//Sms Gönderim Raporları
-	'sms'       => array(
-		
-		'0'     =>  'Could not be sent',
-		'1'     =>  'Processing',
-		'2'     =>  'Sent',
-		'3'     =>  'Successful',
-		'4'     =>  'In Queue',
-		'5'     =>  'Timeout',
-		'6'     =>  'Unsuccessful',
-		'7'     =>  'Rejected',
-		'11'    =>  'Unknown',
-		'12'    =>  'No Network',
-		'13'    =>  'Error',
-		
-	),
 
-	//App-specific
-	'app'   => array(
-		
-		'0'     => 'You must provide a message',
-		'1'     => 'Recipent(s) must be an array',
-		'2'     => 'Misformatted Recipent(s), all of them have to be an integer',
-		'3'     => 'You must provide a receiver number',
-		
-		'100'   => 'SMS have been sent successfully!',
-		'101'   => 'No SMS sent',
+		'20'	=> 'Geçersiz bir SMS hizmet sağlayıcı girdiniz.',
+		'21'	=> 'Seçtiğiniz SMS hizmet sağlayıcı için API adresi bulunmuyor.',
+		'22'	=> 'Geçersiz bir SMS başlığı(originator - senderID) girdiniz.',
 
-	),
 
-);
+
+		'900'	=> 'İstek işlenirken teknik bir problem meydana geldi.',
+		'901'	=> 'SMS gönderilemedi. (Hizmet sağlayıcıdan dönen hata mesajı yakalanamadı)',
+		'902'	=> 'SMS gönderilemedi. (Parametre kontrolünde hata mevcut @todo)',
+	],
+
+
+	'turacell' => [
+
+		'default' => [
+			'00' 	=> 'Sistem Hatası.',
+			'20' 	=> 'Tanımsız Hata (XML formatını kontrol ediniz veya TURATEL’den destek alınız).',
+			'21' 	=> 'Hatalı XML Formatı (\n - carriage return – newline vb içeriyor olabilir).',
+			'22' 	=> 'Kullanıcı Aktif Değil.',
+			'23' 	=> 'Kullanıcı Zaman Aşımında.',
+		],
+
+
+		'services' => [
+			'01' 	=> 'Kullanıcı adı ya da şifre hatalı.',
+			'02' 	=> 'Kredisi yeterli değil.',
+			'03' 	=> 'Geçersiz içerik.',
+			'04' 	=> 'Bilinmeyen SMS tipi.',
+			'05' 	=> 'Hatalı gönderen ismi.',
+			'06' 	=> 'Mesaj metni ya da Alıcı bilgisi girilmemiş.',
+			'07' 	=> 'İçerik uzun fakat Concat özelliği ayarlanmadığından mesaj birleştirilemiyor.',
+			'08' 	=> 'Kullanıcının mesaj göndereceği gateway tanımlı değil ya da şu anda çalışmıyor.',
+			'09' 	=> 'Yanlış tarih formatı.Tarih ddMMyyyyhhmm formatında olmalıdır.',
+		],
+
+		'reports' => [
+			'1' 	=> 'xxx.',
+		],
+
+	],
+];

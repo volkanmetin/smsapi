@@ -19,9 +19,9 @@ class Smsapi
     protected $lang;
 
     protected $api_url;
-    protected $last_message;
+    public $last_message;
     protected $last_err_code = 900;
-    protected $data;
+    public $data;
 
     protected $allowed_providers = array('turacell');
 
@@ -41,25 +41,6 @@ class Smsapi
             $this->last_message = $this->lang['api']['21'];
             return false;
         }
-    }
-
-    /**
-     * setting API endpoint url method
-     * @return boolen
-     *
-     */
-    private function setApiUrl()
-    {
-        switch ($this->config['sms_provider']) {
-            case 'turacell':
-                $this->api_url = 'https://processor.smsorigin.com/xml/process.aspx';
-                break;
-            
-            default:
-                return false;
-                break;
-        }
-        return true;
     }
 
     /**
@@ -142,6 +123,91 @@ class Smsapi
     }
 
     /**
+     * Sending SMS method
+     * @param mix $number
+     * @param mix $message
+     * @return array list of originators
+     */
+    public function send($number, $message, $date = null, $originator = null)
+    {
+        $provider = $this->config['sms_provider'];
+
+        if(!$this->checkParams($number, $message, $date))
+        {
+            if(empty($this->last_message))
+                $this->last_message = $this->lang['api']['900'];
+
+            return false;
+        }
+
+        if($originator == null)
+        {
+            $originator = $this->config[$provider]['originator'];
+
+            if(empty($originator)) {
+                $this->last_message = $this->lang['api']['4'];
+                return false;
+            }
+        }
+
+        $data = $this->prepare_data($number, $message, $originator, $date);
+
+        $result = $this->postXML($data);
+
+        if($result === false)
+        {
+            if(!empty($this->last_err_code)) {
+                if(!empty($this->lang[$provider]['default'][$this->last_err_code]))
+                    $this->last_message = $this->lang[$provider]['default'][$this->last_err_code];
+                else
+                    $this->last_message = $this->lang[$provider]['services'][$this->last_err_code];
+            }
+            else
+                $this->last_message = $this->lang['api']['901'];
+
+            return false;
+        }
+        else {
+            
+            if($this->config['sms_provider'] == "turacell") {
+                $p = explode(':', $result);
+                return trim($p[1]);
+            }
+
+        }
+    }
+
+    /**
+     * Get last message from API
+     * @return string last message
+     *
+     */
+    public function lastMessage()
+    {
+        return $this->last_message;
+    }
+
+
+    /**
+     * setting API endpoint url method
+     * @return boolen
+     *
+     */
+    private function setApiUrl()
+    {
+        switch ($this->config['sms_provider']) {
+            case 'turacell':
+                $this->api_url = 'https://processor.smsorigin.com/xml/process.aspx';
+                break;
+
+            default:
+                return false;
+                break;
+        }
+        return true;
+    }
+
+    /**
      * Parameters check method
      * @param string $number number(s) to recieve
      * @param string $message message(s) to be sent
@@ -167,7 +233,7 @@ class Smsapi
                 return false;
             }
         }
-        
+
         // message check rules
         if(is_array($message)) {
 
@@ -208,67 +274,13 @@ class Smsapi
     }
 
     /**
-     * Sending SMS method
-     * @param mix $message 
-     * @param mix $number 
-     * @return array list of originators
-     */
-    public function send($message, $number, $date = null, $originator = null)
-    {
-        $provider = $this->config['sms_provider'];
-
-        if(!$this->checkParams($number, $message, $date))
-        {
-            if(empty($this->last_message))
-                $this->last_message = $this->lang['api']['900'];
-
-            return false;
-        }
-
-        if($originator == null)
-        {
-            $originator = $this->config[$provider]['originator'];
-
-            if(empty($originator)) {
-                $this->last_message = $this->lang['api']['4'];
-                return false;
-            }
-        }
-
-        $data = $this->prepare_data($number, $message);
-
-        if($result = $this->postXML($data) === false)
-        {
-            if(!empty($this->last_err_code)) {
-                if(!empty($this->lang[$provider]['default'][$this->last_err_code]))
-                    $this->last_message = $this->lang[$provider]['default'][$this->last_err_code];
-                else
-                    $this->last_message = $this->lang[$provider]['services'][$this->last_err_code];
-            }
-            else
-                $this->last_message = $this->lang['api']['901'];
-
-            return false;
-        }
-        else {
-            
-            if($this->config['sms_provider'] == "turacell") {
-
-                list($label, $id)=explode(':', $result);
-                return trim($id);
-            }
-
-        }
-    }
-
-    /**
      * Preparing xml data
      * @param mix $message 
      * @param mix $number 
      * @return string XML data
      *
      */
-    private function prepare_data($number, $message)
+    private function prepare_data($number, $message, $originator, $date = null)
     {
         $data = false;
 
@@ -316,8 +328,7 @@ class Smsapi
                     }
                     $data .= '</Messages>';
                 } else {
-                    $this->last_message = $this->lang['api']['902'];
-                    return false;
+                    $data .= '<Mesgbody>'.$message.'</Mesgbody><Numbers>'.$number.'</Numbers>';
                 }
             }
 
